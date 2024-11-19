@@ -3,9 +3,11 @@ import "./main.css"
 import { NavLink } from "react-router-dom";
 import { ToastContainer, toast } from 'react-toastify';
   import 'react-toastify/dist/ReactToastify.css';
+  import { otprequest } from "../services/apis";
+  import { useNavigate } from "react-router-dom";
 
 const Login=()=>{
-
+  const navigate=useNavigate();
     const[email,Setemail]=useState("");
     const sendotp=async(e)=>{
         e.preventDefault();
@@ -20,6 +22,15 @@ const Login=()=>{
                 email:email,
             }
             console.log(data);
+            const response=await otprequest(data);
+            console.log(response);
+             
+            if (response.status === 200) {
+              
+              navigate("/user/otp",{state:email})
+          } else {
+              toast.error(response.response.data.error);
+          } 
         }
 
     }

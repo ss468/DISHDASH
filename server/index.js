@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors())
 
 
-app.use(routers);
+app.use("/", routers);
 app.get("/",async(req,res)=>{
     try{
         const sendingfooddata=await fooddata.find({});

@@ -18,7 +18,7 @@ const userschema=new mongoose.Schema({
         },
       },
     password:{
-        type:Number,
+        type:String,
         required:true,
         minlength:6,
     },
@@ -34,11 +34,14 @@ const userschema=new mongoose.Schema({
 
 
 
-userschema.pre("save",async function (next) {
-     if(this.isModified("password")){
-        this.password=await bcrypt.hash(this.password,12);
-     }
-     next();    
-});
-
+userschema.pre("save", async function (next) {
+    try {
+      if (this.isModified("password") && this.password) {
+        this.password = await bcrypt.hash(this.password, 12);
+      }
+      next();
+    } catch (error) {
+      next(error);
+    }
+  });
 export const users=mongoose.model("USERS",userschema);
